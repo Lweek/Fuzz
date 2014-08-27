@@ -25,4 +25,14 @@ class LoaderTest extends PHPUnit_Framework_TestCase {
         $this->assertSame(TDIR_APPLICATION . '/modules/forum/Forum.php', $path, 'Shall be same');
     }
 
+    public function testAutoloading() {
+
+        $this->loader->addNamespacePath('Test', TDIR_ROOT . '/dummy');
+
+        $dummy = new Test\DummyClass();
+
+        $this->assertTrue($dummy->success(), 'Shall be true');
+
+    }
+
 }

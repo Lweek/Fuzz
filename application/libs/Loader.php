@@ -8,7 +8,21 @@ namespace Fuzz;
 
 class Loader {
 
+    static protected $sharedLoader;
     protected $paths;
+
+// Public part - api
+
+    static public function shared() {
+        if (!isset(self::$sharedLoader)) {
+            self::$sharedLoader = new self();
+        }
+        return self::$sharedLoader;
+    }
+
+    public function __construct() {
+        spl_autoload_register(array($this, 'autoloader'), true, false);
+    }
 
     public function addNamespacePath($namespace, $path) {
         if (!isset($this->paths[$namespace])) {
@@ -30,6 +44,8 @@ class Loader {
         return $path;
     }
 
+// Private part - black box
+
     protected function extractNamespace($className) {
         $lastBackslashPosition = strrpos($className, '\\');
         $namespace = substr($className, 0, $lastBackslashPosition);
@@ -46,6 +62,15 @@ class Loader {
         $path = str_replace('{class}', strtolower($class), $path);
         return $path;
     }
+
+    protected function autoloader($className) {
+        $path = $this->path($className);
+        if (file_exists($path)) {
+            require_once $path;
+        }
+    }
+
+// Another api
 
     public function __sleep() {
         return array('paths');
