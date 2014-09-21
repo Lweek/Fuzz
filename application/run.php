@@ -9,6 +9,6 @@ ini_set('display_errors', true);
 
 define('FUZZ_PATH_LIBS', __DIR__ . '/libs');
 
-// autloader to load script files
+// autoloader to load script files
 require_once FUZZ_PATH_LIBS . '/Loader.php';
 Fuzz\Loader::shared()->addNamespacePath('Fuzz', FUZZ_PATH_LIBS);
